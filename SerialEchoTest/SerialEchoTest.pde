@@ -20,7 +20,6 @@ void setup() {
   if (serial) {
 
     delay(1000);
-    myPort.write(".");
     println("Serial connected");
   } else {
     println("Serial NOT connected");
@@ -32,11 +31,9 @@ void draw() {
   
   background(0);
   
-  if (millis() - timer >= 1000) {
+  if (millis() - timer >= 3000) {
     sendData();
     timer = millis();
-//    println(randomString());
-//    sentCount += 1;
   }
   
   textSize(32);
@@ -59,7 +56,9 @@ void serialEvent (Serial myPort) {
 }
 
 void checkString(String inString) {
-
+  
+  inString = trim(inString);
+  
   if (inString.equals(sentData)) {
     goodMessages += 1;
   } else {
@@ -72,20 +71,21 @@ void sendData() {
   String outputString = randomString();
 
   sentData = outputString;
+  println(sentData);
   myPort.write(outputString);
+  myPort.write("\n");
   myPort.clear();
-  println(outputString);
   sentCount += 1;
 }
 
 String randomString() {
 
-  char[] chars = "abcdefghijklmnopqrstuvwxyz1234567890".toCharArray();
+  char[] chars = "abcdefghijklmnopqrstuvwxyz1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
 
   String outputString = "";
 
   for (int i = 0; i < random (10, 30); i++) {
-    outputString += chars[int(random(36))];
+    outputString += chars[int(random(chars.length))];
   }
 
   return outputString;
