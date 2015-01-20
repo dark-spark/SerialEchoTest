@@ -9,6 +9,7 @@ int sentCount = 0;
 int recievedCount = 0;
 int timer;
 
+
 void setup() {
 
   size(500, 200); 
@@ -18,7 +19,6 @@ void setup() {
   boolean serial = startSerial();
 
   if (serial) {
-
     delay(1000);
     println("Serial connected");
   } else {
@@ -27,11 +27,12 @@ void setup() {
   delay(1000);
 }
 
+
 void draw() {
   
   background(0);
   
-  if (millis() - timer >= 3000) {
+  if (millis() - timer >= 70) {
     sendData();
     timer = millis();
   }
@@ -48,6 +49,7 @@ void draw() {
   text(recievedCount, 300, 120);
 }
 
+
 void serialEvent (Serial myPort) {
 
   String inString = myPort.readStringUntil('\n');
@@ -55,9 +57,17 @@ void serialEvent (Serial myPort) {
   recievedCount += 1;
 }
 
+
 void checkString(String inString) {
   
   inString = trim(inString);
+
+  print(sentData);
+  print(" ");
+  println(sentData.length());
+  print(inString);
+  print(" ");
+  println(inString.length());
   
   if (inString.equals(sentData)) {
     goodMessages += 1;
@@ -66,17 +76,18 @@ void checkString(String inString) {
   }
 }
 
+
 void sendData() {
 
   String outputString = randomString();
 
   sentData = outputString;
-  println(sentData);
   myPort.write(outputString);
   myPort.write("\n");
   myPort.clear();
   sentCount += 1;
 }
+
 
 String randomString() {
 
@@ -90,7 +101,6 @@ String randomString() {
 
   return outputString;
 } 
-
 
 
 //This function initiates the serial comms and returns state of connection
